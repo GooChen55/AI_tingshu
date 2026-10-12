@@ -1,11 +1,18 @@
 # 听见 · 智能听书平台
 
+[![CI](https://github.com/GooChen55/AI_tingshu/actions/workflows/ci.yml/badge.svg)](https://github.com/GooChen55/AI_tingshu/actions/workflows/ci.yml)
+
+Java 17 · Spring Boot · Vue 3 / UniApp · FastAPI · RAG · Agent · MySQL / Redis / MongoDB
+
+[快速启动](#快速启动) · [文档目录](docs/README.md) · [开发与贡献](docs/开发与贡献.md) · [来源与授权](docs/来源与第三方说明.md)
+
 听见将音频收听、个人业务助手、知识问答和运营管理放在同一平台中。Java 负责身份、内容、订单与售后事务，Python 负责模型工具编排、检索和受控数据查询，UniApp/Vue 提供用户端，管理台提供审核与模型配置。
 
 ## 核心功能
 
 - **收听与账号**：注册登录、分类与书名搜索、专辑详情、分页章节、播放与拖动、进度保存及恢复。本地示例音频支持 HTTP Range。
 - **个人助手**：查询会员、进度、订单与售后，会话绑定认证用户并持久化。模型仅选择查询工具，不能提交交易或执行审核。
+- **页面内交互**：全局悬浮入口打开听见助手，小窗与全屏共享会话和草稿，跨页面使用时音频继续播放。Enter 发送，Shift+Enter 换行，Esc 退出全屏或关闭小窗。
 - **知识问答**：12 份资料、120 个片段，向量与 BM25 检索经 RRF 融合；核验片段 ID 和逐字引用，提供可展开的原文证据。
 - **运营问数**：六个聚合视图、指标目录、SQL AST 白名单、数据库只读权限与审计；限制单视图、100 行、3 秒执行时间。
 - **订单与售后**：服务端定价、幂等下单、15 分钟超时关闭、支付回调校验、售后草稿确认与审核、持久化退款任务及租约重试。支付和退款使用本地模拟渠道，不涉及真实资金，也不授予付费播放权益。
@@ -16,12 +23,16 @@
 需要 Docker Desktop、JDK 17、Maven、Node.js/npm、Python 3.12+。在项目根目录执行，JavaHome 改为本机的 JDK 17 路径：
 
 ```powershell
+git clone https://github.com/GooChen55/AI_tingshu.git
+cd AI_tingshu
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements/requirements.lock.txt
 .\Start.ps1 -JavaHome 'D:\develop\JAVA\jdk\ms-17.0.18' -UseLlm -WithKnowledge -WithOperations
 ```
 
 首次启动初始化独立数据库卷并构建 Java 与 H5。后续启动可加 `-SkipBuild`；修改源码后先停止，再重新构建和启动。停止保留数据库卷。
+
+仓库当前为私有，需要已获授权的 GitHub 账号。首次演示可以先运行 `.\Start.ps1 -JavaHome '你的 JDK 17 路径'` 使用规则查询，再配置模型并开启完整 AI 服务。
 
 ```powershell
 .\Stop.ps1

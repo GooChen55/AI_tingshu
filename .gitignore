@@ -30,3 +30,7 @@ __pycache__/
 *.db
 *.sql.gz
 *.sql.zip
+
+# Personal documents and temporary exports
+/output/
+/tmp/
