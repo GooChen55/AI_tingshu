@@ -59,12 +59,17 @@ def test_expired_token_and_demo_disabled(tmp_path):
 
 
 def test_knowledge_upstream_errors_are_not_fake_success(tmp_path):
+    calls = []
     def upstream(request):
         if request.url.path.endswith("/me"):
             return httpx.Response(200, json={"code": 200, "data": {"id": 1}})
+        assert request.url.path == "/query"
+        assert request.headers["x-listening-key"] == "internal-test"
+        calls.append(request)
         return httpx.Response(503)
-    with make_client(tmp_path, upstream, listening_knowledge_url="http://knowledge") as client:
+    with make_client(tmp_path, upstream, listening_knowledge_url="http://knowledge", listening_service_key="internal-test") as client:
         assert client.post("/api/assistant/chat", headers={"token": "valid"}, json={"text": "三体"}).status_code == 502
+    assert len(calls) == 1
 
 
 def test_actual_model_tool_loop_forwards_token_and_never_user_id(tmp_path):
